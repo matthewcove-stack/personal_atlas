@@ -4,11 +4,11 @@
 - Docker + Docker Compose
 - Python 3.12+ (for local scripts/tests)
 
-## Local Setup
+## Local Setup (Docker)
 1) Copy env file if needed:
    - `.env` already included for local dev
    - update `.env` if you want different credentials
-2) Start services:
+2) Start services (API + MCP in Docker):
 ```bash
 docker compose up -d
 ```
@@ -16,13 +16,13 @@ Windows (PowerShell):
 ```powershell
 docker compose up -d
 ```
-3) Run migrations:
+3) Run migrations inside the API container:
 ```bash
-alembic upgrade head
+docker compose exec -T -e PYTHONPATH=/app api alembic upgrade head
 ```
 Windows (PowerShell):
 ```powershell
-alembic upgrade head
+docker compose exec -T -e PYTHONPATH=/app api alembic upgrade head
 ```
 4) API is available at: http://localhost:8000
 
@@ -45,14 +45,8 @@ python scripts\seed.py
 ```
 
 ## Phase 2: MCP Server
-Run MCP server locally:
-```bash
-python -m app.mcp_server.main
-```
-Windows (PowerShell):
-```powershell
-python -m app.mcp_server.main
-```
+MCP runs as part of Docker Compose and is available at:
+- `http://localhost:8765/sse`
 
 Run smoke test:
 ```bash

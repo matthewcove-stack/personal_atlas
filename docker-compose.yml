@@ -38,6 +38,18 @@ services:
       - neo4j
       - qdrant
 
+  mcp:
+    build: .
+    env_file:
+      - .env
+    command: ["python", "-m", "app.mcp_server.main"]
+    ports:
+      - "8765:8765"
+    depends_on:
+      - postgres
+      - neo4j
+      - qdrant
+
 volumes:
   postgres_data:
   neo4j_data:

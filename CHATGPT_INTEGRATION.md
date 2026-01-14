@@ -2,7 +2,7 @@
 
 This doc explains how to run the MCP server locally, expose it via HTTPS, and connect it in ChatGPT Developer Mode.
 
-## 1) Start services
+## 1) Start services (API + MCP in Docker)
 ```bash
 docker compose up -d
 ```
@@ -11,25 +11,16 @@ Windows (PowerShell):
 docker compose up -d
 ```
 
-## 2) Run API
+## 2) Run migrations (inside API container)
 ```bash
-uvicorn app.main:app --host 0.0.0.0 --port 8000
+docker compose exec -T -e PYTHONPATH=/app api alembic upgrade head
 ```
 Windows (PowerShell):
 ```powershell
-uvicorn app.main:app --host 0.0.0.0 --port 8000
+docker compose exec -T -e PYTHONPATH=/app api alembic upgrade head
 ```
 
-## 3) Run MCP server
-```bash
-python -m app.mcp_server.main
-```
-Windows (PowerShell):
-```powershell
-python -m app.mcp_server.main
-```
-
-## 4) Expose MCP via HTTPS (ngrok)
+## 3) Expose MCP via HTTPS (ngrok)
 ```bash
 ngrok config add-authtoken $env:NGROK_AUTHTOKEN
 ngrok http 8765
@@ -43,12 +34,12 @@ Copy the HTTPS URL printed by ngrok, for example:
 https://your-subdomain.ngrok-free.app
 ```
 
-## 5) Connect in ChatGPT Developer Mode
+## 4) Connect in ChatGPT Developer Mode
 1) Open ChatGPT Desktop/Web.
 2) Enable Developer Mode.
-3) Add a new MCP server and paste the HTTPS URL from ngrok.
+3) Add a new MCP server and paste the HTTPS URL from ngrok, ending with `/sse`.
 
-## 6) Test commands in ChatGPT
+## 5) Test commands in ChatGPT
 Examples:
 - "search MDF"
 - "stage node" with the required fields
@@ -69,5 +60,5 @@ Example flow (search -> stage -> commit):
 3) commit node with staged_id from step 2
 
 ## Notes
-- The MCP server connects directly to Postgres/Neo4j/Qdrant using `.env` values.
-- Set `MCP_HOST`/`MCP_PORT` if you need a different bind address or port.
+- The MCP server runs in Docker and connects to Postgres/Neo4j/Qdrant using `.env`.
+- MCP SSE endpoint: `http://localhost:8765/sse` (use the ngrok URL + `/sse`).

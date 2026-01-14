@@ -4,7 +4,7 @@ from app.config import settings
 from app.mcp_server.schemas import AtlasNodeInput
 from app.mcp_server.tooling import build_tooling
 
-mcp = FastMCP("personal_atlas")
+mcp = FastMCP("personal_atlas", host=settings.mcp_host, port=settings.mcp_port)
 tooling = build_tooling()
 
 
@@ -34,4 +34,4 @@ def atlas_get_node(node_id: str) -> dict:
 
 
 if __name__ == "__main__":
-    mcp.run(host=settings.mcp_host, port=settings.mcp_port)
+    mcp.run(transport="sse")
