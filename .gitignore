@@ -17,3 +17,8 @@ Desktop.ini
 
 # Runtime
 node_modules/
+
+# Python caches
+__pycache__/
+
+*.pyc

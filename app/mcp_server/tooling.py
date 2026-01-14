@@ -1,16 +1,18 @@
 from dataclasses import dataclass
 from datetime import date, datetime
+from typing import TYPE_CHECKING, Any
 
-from app.adapters.postgres.repo import PostgresAtlasRepository, PostgresAuditRepository
-from app.adapters.postgres.staged_repo import StagedWriteRepository
-from app.adapters.qdrant.repo import QdrantVectorRepository
-from app.adapters.neo4j.repo import Neo4jGraphRepository
-from app.adapters.notion.client import NotionMirrorRepository
 from app.config import settings
 from app.core.domain import AtlasLink
 from app.core.services import CommitService, NotFoundError, StageService
-from app.embeddings.local_stub import LocalStubEmbeddingProvider
 from app.mcp_server.schemas import AtlasNodeInput
+
+if TYPE_CHECKING:
+    from app.adapters.postgres.repo import PostgresAtlasRepository, PostgresAuditRepository
+    from app.adapters.postgres.staged_repo import StagedWriteRepository
+    from app.adapters.qdrant.repo import QdrantVectorRepository
+    from app.adapters.neo4j.repo import Neo4jGraphRepository
+    from app.adapters.notion.client import NotionMirrorRepository
 
 
 def _canonical_title(domain: str, subsystem: str) -> str:
@@ -32,12 +34,12 @@ def _parse_date(value: str) -> date:
 
 @dataclass
 class AtlasMcpTooling:
-    atlas_repo: PostgresAtlasRepository
-    audit_repo: PostgresAuditRepository
-    staged_repo: StagedWriteRepository
-    vector_repo: QdrantVectorRepository
-    graph_repo: Neo4jGraphRepository
-    notion_repo: NotionMirrorRepository | None
+    atlas_repo: Any
+    audit_repo: Any
+    staged_repo: Any
+    vector_repo: Any
+    graph_repo: Any
+    notion_repo: Any | None
 
     def health(self) -> dict:
         return {
@@ -155,6 +157,13 @@ class AtlasMcpTooling:
 
 
 def build_tooling() -> AtlasMcpTooling:
+    from app.adapters.postgres.repo import PostgresAtlasRepository, PostgresAuditRepository
+    from app.adapters.postgres.staged_repo import StagedWriteRepository
+    from app.adapters.qdrant.repo import QdrantVectorRepository
+    from app.adapters.neo4j.repo import Neo4jGraphRepository
+    from app.adapters.notion.client import NotionMirrorRepository
+    from app.embeddings.local_stub import LocalStubEmbeddingProvider
+
     embedding_provider = LocalStubEmbeddingProvider()
     return AtlasMcpTooling(
         atlas_repo=PostgresAtlasRepository(),

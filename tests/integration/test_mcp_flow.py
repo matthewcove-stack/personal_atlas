@@ -1,8 +1,7 @@
 import uuid
 
 import pytest
-
-import psycopg2
+psycopg2 = pytest.importorskip("psycopg2")
 from neo4j import GraphDatabase
 from qdrant_client import QdrantClient
 
