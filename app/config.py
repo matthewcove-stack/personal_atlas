@@ -19,6 +19,10 @@ class Settings(BaseSettings):
     notion_database_id: str | None = None
 
     embedding_dim: int = 8
+    staged_write_ttl_minutes: int = 1440
+    mcp_host: str = "0.0.0.0"
+    mcp_port: int = 8765
+    atlas_api_base_url: str = "http://localhost:8000"
 
     class Config:
         env_file = ".env"

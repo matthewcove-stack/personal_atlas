@@ -1,6 +1,6 @@
 from datetime import date
 
-from sqlalchemy import select
+from sqlalchemy import desc, select
 
 from app.adapters.postgres.models import AtlasLinkModel, AtlasNodeModel, AuditLogModel
 from app.core.domain import AtlasLink, AtlasNode
@@ -105,3 +105,24 @@ class PostgresAuditRepository:
             )
             session.add(entry)
             session.commit()
+
+    def latest_commit_audit_id(self, idempotency_key: str) -> str | None:
+        with SessionLocal() as session:
+            stmt = (
+                select(AuditLogModel)
+                .where(
+                    AuditLogModel.action == "commit",
+                    AuditLogModel.idempotency_key == idempotency_key,
+                )
+                .order_by(desc(AuditLogModel.created_at))
+            )
+            entry = session.execute(stmt).scalars().first()
+            return entry.id if entry else None
+
+    def commit_count(self, idempotency_key: str) -> int:
+        with SessionLocal() as session:
+            stmt = select(AuditLogModel).where(
+                AuditLogModel.action == "commit",
+                AuditLogModel.idempotency_key == idempotency_key,
+            )
+            return len(session.execute(stmt).scalars().all())

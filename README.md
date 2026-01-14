@@ -12,8 +12,16 @@
 ```bash
 docker compose up -d
 ```
+Windows (PowerShell):
+```powershell
+docker compose up -d
+```
 3) Run migrations:
 ```bash
+alembic upgrade head
+```
+Windows (PowerShell):
+```powershell
 alembic upgrade head
 ```
 4) API is available at: http://localhost:8000
@@ -22,11 +30,49 @@ alembic upgrade head
 ```bash
 pytest
 ```
+Windows (PowerShell):
+```powershell
+pytest
+```
 
 ## Seed Example
 ```bash
 python scripts/seed.py
 ```
+Windows (PowerShell):
+```powershell
+python scripts\seed.py
+```
+
+## Phase 2: MCP Server
+Run MCP server locally:
+```bash
+python -m app.mcp_server.main
+```
+Windows (PowerShell):
+```powershell
+python -m app.mcp_server.main
+```
+
+Run smoke test:
+```bash
+python scripts/mcp_smoke_test.py
+```
+Windows (PowerShell):
+```powershell
+python scripts\mcp_smoke_test.py
+```
+
+Expose MCP server via ngrok:
+```bash
+ngrok http 8765
+```
+Windows (PowerShell):
+```powershell
+ngrok http 8765
+```
+
+ChatGPT integration steps are in `CHATGPT_INTEGRATION.md`.
 
 ## Curl Examples
 Stage:
@@ -60,6 +106,17 @@ Search:
 ```bash
 curl "http://localhost:8000/atlas/search?q=MDF&k=3"
 ```
+
+## Makefile Targets
+```bash
+make up
+make down
+make api
+make mcp
+make test
+make seed
+```
+Windows note: `make` isn't available by default. Use the direct commands above or the PowerShell scripts in `scripts\` for migrations/tests.
 
 ## Notion Mirror (Optional)
 - Set `NOTION_ENABLED=true`, `NOTION_TOKEN`, and `NOTION_DATABASE_ID` in `.env`.

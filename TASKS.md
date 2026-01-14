@@ -26,3 +26,22 @@
 - [ ] Integration tests (stage/commit/search)
 - [ ] Seed script for example node
 
+## Phase 2 Plan (concise)
+1) Add staged_writes persistence + schema migration.
+2) Implement MCP server with safe tools and receipts.
+3) Add MCP config + HTTPS tunnel guidance docs.
+4) Add unit/integration tests and MCP smoke script.
+5) Update README and add Makefile targets.
+
+## Phase 2 Checklist
+- [ ] staged_writes table (id, payload, status, created_at, expires_at, validation_summary, idempotency_key)
+- [ ] MCP server module/service with atlas tools + health
+- [ ] Tool schemas + validation for AtlasNodeInput
+- [ ] Write safety: commit requires staged_id, idempotent, audit log
+- [ ] Receipts (node_id, audit_log_id, qdrant/neo4j/notion flags, links)
+- [ ] MCP env config + .env.example updates
+- [ ] CHATGPT_INTEGRATION.md
+- [ ] Unit tests (tool validation, staging/commit consistency)
+- [ ] Integration tests (stage->commit->search + idempotent commit)
+- [ ] MCP smoke test script
+- [ ] README + Makefile updates

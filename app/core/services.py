@@ -72,14 +72,6 @@ class CommitService:
         if not node:
             raise NotFoundError("staged node not found")
         if node.status == "committed":
-            self.audit_repo.log(
-                action="commit",
-                entity_type="atlas_node",
-                entity_id=node.id,
-                idempotency_key=idempotency_key,
-                status="noop",
-                message="already committed",
-            )
             return node
         node = self.atlas_repo.mark_committed(node.id)
         links = self.atlas_repo.get_links(node.id)
